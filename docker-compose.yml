@@ -1,0 +1,23 @@
+version: '3'
+
+# For dev only
+
+services:
+  softu2f-fprintd:
+    image: ngxson/softu2f-fprintd-docker
+    build: .
+    container_name: softu2f-fprintd
+    network_mode: host  # fix for "unix:abstract" dbus socket
+    restart: unless-stopped
+    environment:
+      - USER
+      - XDG_RUNTIME_DIR
+      - DBUS_SESSION_BUS_ADDRESS
+      - HOME=/data
+    volumes:
+      - ./data:/data
+      - /run/user:/run/user
+      - /var/run/dbus:/var/run/dbus
+      - /var/lib/fprint/:/var/lib/fprint/:ro
+    devices:
+      - /dev/uhid
